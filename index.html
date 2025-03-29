@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Response Testing</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      .test-case {
+        margin-bottom: 30px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .success {
+        color: green;
+      }
+      .error {
+        color: red;
+      }
+      button {
+        padding: 8px 15px;
+        margin: 5px 0;
+        cursor: pointer;
+      }
+      pre {
+        background: #f5f5f5;
+        padding: 10px;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>AI Chatbot Response</h1>
+
+    <div class="test-case">
+      <h2>Response 1</h2>
+      <pre>
+const newHiddenInput = document.createElement('input')
+    .setAttribute('type', 'hidden')
+    .setAttribute('name', key)
+    .setAttribute('value', results[key]);
+        </pre
+      >
+      <button onclick="testResponse1()">Test Response 1</button>
+      <div id="result1"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Response 2</h2>
+      <pre>
+function createAndConfigureElement(tag, attributes) {
+    const element = document.createElement(tag);
+    for (const [key, value] of Object.entries(attributes)) {
+        element.setAttribute(key, value);
+    }
+    return element;
+}
+
+const newHiddenInput = createAndConfigureElement('input', {
+    type: 'hidden',
+    name: key,
+    value: results[key]
+});
+        </pre
+      >
+      <button onclick="testResponse2()">Test Response 2</button>
+      <div id="result2"></div>
+    </div>
+
+    <div class="test-case">
+      <h2>Alternative</h2>
+      <pre>
+const newHiddenInput = Object.assign(document.createElement('input'), { 
+    type: 'hidden', 
+    name: key, 
+    value: results[key] 
+});
+        </pre
+      >
+      <button onclick="testAlternative()">Test Alternative</button>
+      <div id="resultAlt"></div>
+    </div>
+
+    <script>
+      const key = "testKey";
+      const results = { testKey: "testValue" };
+
+      function testResponse1() {
+        const resultDiv = document.getElementById("result1");
+        resultDiv.innerHTML = "";
+
+        try {
+          const newHiddenInput = document
+            .createElement("input")
+            .setAttribute("type", "hidden")
+            .setAttribute("name", key)
+            .setAttribute("value", results[key]);
+
+          resultDiv.innerHTML =
+            '<p class="error">Unexpected - this should have failed!</p>';
+          resultDiv.innerHTML +=
+            "<p>Created element: " +
+            (newHiddenInput ? "Exists" : "Undefined") +
+            "</p>";
+        } catch (e) {
+          resultDiv.innerHTML = `<p class="success">Expected error occurred:</p>
+                                      <p><strong>${e.message}</strong></p>
+                                      <p>This confirms Response 1 chaining approach doesn't work because setAttribute() returns undefined.</p>`;
+        }
+      }
+
+      function testResponse2() {
+        const resultDiv = document.getElementById("result2");
+        resultDiv.innerHTML = "";
+
+        try {
+          function createAndConfigureElement(tag, attributes) {
+            const element = document.createElement(tag);
+            for (const [key, value] of Object.entries(attributes)) {
+              element.setAttribute(key, value);
+            }
+            return element;
+          }
+
+          const newHiddenInput = createAndConfigureElement("input", {
+            type: "hidden",
+            name: key,
+            value: results[key],
+          });
+
+          resultDiv.innerHTML =
+            '<p class="success">Element created successfully!</p>';
+          resultDiv.innerHTML += "<p>Element details:</p>";
+          resultDiv.innerHTML += `<pre>${newHiddenInput.outerHTML}</pre>`;
+          resultDiv.innerHTML +=
+            "<p>This shows Response 2 utility function works correctly.</p>";
+
+          document.body.appendChild(newHiddenInput);
+          newHiddenInput.style.display = "block";
+        } catch (e) {
+          resultDiv.innerHTML = `<p class="error">Error occurred: ${e.message}</p>`;
+        }
+      }
+
+      function testAlternative() {
+        const resultDiv = document.getElementById("resultAlt");
+        resultDiv.innerHTML = "";
+
+        try {
+          const newHiddenInput = Object.assign(
+            document.createElement("input"),
+            {
+              type: "hidden",
+              name: key,
+              value: results[key],
+            }
+          );
+
+          resultDiv.innerHTML =
+            '<p class="success">Element created successfully with Object.assign!</p>';
+          resultDiv.innerHTML += "<p>Element details:</p>";
+          resultDiv.innerHTML += `<pre>${newHiddenInput.outerHTML}</pre>`;
+          resultDiv.innerHTML +=
+            "<p>This shows a true single-statement alternative that works.</p>";
+
+          document.body.appendChild(newHiddenInput);
+          newHiddenInput.style.display = "block";
+        } catch (e) {
+          resultDiv.innerHTML = `<p class="error">Error occurred: ${e.message}</p>`;
+        }
+      }
+    </script>
+  </body>
+</html>
